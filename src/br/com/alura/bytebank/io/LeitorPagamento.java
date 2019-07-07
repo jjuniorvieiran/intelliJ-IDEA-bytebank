@@ -12,27 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class LeitorPagamento {
-
-    public static final String RECURSOS = "recursos";
-    public static final String BACKUP = "backup";
-
-    private void geraBackup(Path arquivo) throws IOException {
-        Path backup = Paths.get(BACKUP);
-        if (!Files.isDirectory(backup)) {
-            Files.createDirectory(backup);
-        }
-
-        Path nomeDoArquivo = arquivo.getFileName();
-
-        String arquivoAbsoluto = System.currentTimeMillis() + "-" + nomeDoArquivo.toString();
-
-        Path origem = Paths.get(arquivo.toString());
-        Path destino = Paths.get(backup.toString(), arquivoAbsoluto);
-
-        Files.copy(origem, destino);
-
-    }
+public class LeitorPagamento extends Leitor {
 
     public List<Pagamento> ler(int codigo) throws IOException {
         String arquivo = devolveArquivo(codigo);
@@ -58,21 +38,4 @@ public class LeitorPagamento {
         return pagamentos;
     }
 
-    private String devolveArquivo(int codigo) throws IOException {
-        Iterator<Path> arquivos = lista();
-        int i = 0;
-
-        Path path = null;
-
-        while (i < codigo) {
-            path = arquivos.next();
-            i++;
-        }
-
-        return path.toString();
-    }
-
-    public Iterator<Path> lista() throws IOException {
-        return Files.newDirectoryStream(Paths.get(RECURSOS)).iterator();
-    }
 }
